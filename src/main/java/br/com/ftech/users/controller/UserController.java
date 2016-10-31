@@ -2,6 +2,8 @@ package br.com.ftech.users.controller;
 
 import java.util.List;
 
+import javax.validation.Valid;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.http.HttpHeaders;
@@ -53,7 +55,7 @@ public class UserController {
 	}
 
 	@RequestMapping(method = RequestMethod.POST)
-	public ResponseEntity<Void> createUser(@RequestBody User user, UriComponentsBuilder ucBuilder) {
+	public ResponseEntity<Void> createUser( @Valid @RequestBody User user, UriComponentsBuilder ucBuilder) {
 		if (userService.isUserExist(user)) {
 			return new ResponseEntity<Void>(HttpStatus.CONFLICT);
 		}

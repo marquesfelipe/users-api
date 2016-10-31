@@ -44,7 +44,11 @@ public class UserServiceImpl implements UserService {
 	}
 
 	public boolean isUserExist(User user) {
-		return true;
+		User l_user =repository.findByEmail(user.getEmail());
+		if(l_user != null){
+			return true;
+		}
+		return false;
 	}
 
 	public void deleteAllUsers() {

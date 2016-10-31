@@ -8,6 +8,8 @@ import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.ManyToMany;
 
+import org.hibernate.validator.constraints.Email;
+import org.hibernate.validator.constraints.NotBlank;
 import org.springframework.data.jpa.domain.AbstractPersistable;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -17,9 +19,12 @@ import org.springframework.security.core.userdetails.UserDetails;
 public class User extends AbstractPersistable<Long> implements UserDetails{
 
 	private static final long serialVersionUID = 1L;
-	
+	@NotBlank
+	@Email
 	private String email;
+	@NotBlank
 	private String password;
+	@NotBlank
 	private String name;
 	private int age;
 	@ManyToMany(fetch = FetchType.EAGER)
