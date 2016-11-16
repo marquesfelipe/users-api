@@ -1,5 +1,5 @@
 ﻿# users-api
-API RESTFUL para controle de usuários, com camada de autenticação, autorização e validação.
+API RESTFUL para controle de usuários, com autenticação, autorização, paginação e validação.
 
 Linguagem: Java; 
 Frameworks: Spring MVC,
