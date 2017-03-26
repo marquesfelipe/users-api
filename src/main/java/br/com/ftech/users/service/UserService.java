@@ -3,7 +3,6 @@ package br.com.ftech.users.service;
 import java.util.List;
 
 import org.springframework.data.domain.Page;
-import org.springframework.stereotype.Service;
 
 import br.com.ftech.users.model.User;
 
@@ -15,8 +14,6 @@ public interface UserService {
 	User findByName(String name);
 
 	void saveUser(User user);
-
-	void updateUser(User user);
 
 	void deleteUserById(long id);
 

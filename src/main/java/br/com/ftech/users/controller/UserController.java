@@ -22,7 +22,7 @@ import br.com.ftech.users.model.User;
 import br.com.ftech.users.service.UserService;
 
 @RestController
-@RequestMapping(value = "/user")
+@RequestMapping(value = "/api")
 public class UserController {
 
 	@Autowired
@@ -80,7 +80,7 @@ public class UserController {
 		currentUser.setName(user.getName());
 		currentUser.setPassword(user.getPassword());
 		currentUser.setRoles(user.getRoles());
-		userService.updateUser(currentUser);
+		userService.saveUser(currentUser);
 		return new ResponseEntity<User>(currentUser, HttpStatus.OK);
 	}
 

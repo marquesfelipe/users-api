@@ -1,7 +1,9 @@
 package br.com.ftech.users.conf;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
@@ -23,27 +25,45 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
     private RestAuthenticationFailureHandler restAuthenticationFailureHandler;
     @Autowired
     private RestAuthenticationSuccessHandler restAuthenticationSuccessHandler;
-  
-    @Autowired
-	private UserDetailsService users;   
+
+	@Autowired
+	private UserDetailsService userDetailsService;
+	
+	@Autowired
+	private BCryptPasswordEncoder bCryptPasswordEncoder;
+
 
     @Override
     protected void configure(AuthenticationManagerBuilder auth) throws Exception {
-    	auth.userDetailsService(users).
-    	passwordEncoder(new BCryptPasswordEncoder());
+    /*	auth.inMemoryAuthentication()
+        .withUser("user").password("user").roles("USER").and()
+        .withUser("admin").password("admin").roles("ADMIN"); */
+    	auth.userDetailsService(userDetailsService).
+    	passwordEncoder(bCryptPasswordEncoder); 
     }
  
     @Override
     protected void configure(HttpSecurity http) throws Exception {
     	http.csrf().disable().exceptionHandling()
     	.authenticationEntryPoint(restAuthenticationEntryPoint)
-    	.and().authorizeRequests().antMatchers("/**").authenticated()
     	.and()
-    	.formLogin()
-    	.successHandler(restAuthenticationSuccessHandler)
-        .failureHandler(restAuthenticationFailureHandler)
-        .and()
+    	.authorizeRequests()
+    		.antMatchers(HttpMethod.POST, "/api/**").hasRole("ADMIN")
+    		.antMatchers(HttpMethod.PATCH, "/api/**").hasRole("ADMIN")
+    		.antMatchers(HttpMethod.DELETE, "/api/**").hasRole("ADMIN")
+    		.anyRequest().authenticated()
+    	.and()
+    		.formLogin()
+    		.successHandler(restAuthenticationSuccessHandler)
+    		.failureHandler(restAuthenticationFailureHandler)
+    	.and()
         .logout();
     }
+    
+    @Bean
+	public BCryptPasswordEncoder passwordEncoder() {
+		BCryptPasswordEncoder bCryptPasswordEncoder = new BCryptPasswordEncoder();
+		return bCryptPasswordEncoder;
+	}
 
 }
