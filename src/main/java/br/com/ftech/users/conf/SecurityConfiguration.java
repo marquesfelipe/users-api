@@ -12,7 +12,6 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
 import br.com.ftech.users.security.RestAuthenticationEntryPoint;
 import br.com.ftech.users.security.RestAuthenticationFailureHandler;
-import br.com.ftech.users.security.RestAuthenticationLogoutHandler;
 import br.com.ftech.users.security.RestAuthenticationSuccessHandler;
 
 @Configuration
@@ -39,25 +38,25 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
     	auth.inMemoryAuthentication()
         .withUser("user").password("user").roles("USER").and()
         .withUser("admin").password("admin").roles("ADMIN");
-    	auth.userDetailsService(userDetailsService).
-    	passwordEncoder(bCryptPasswordEncoder); 
+    /*	auth.userDetailsService(userDetailsService).
+    	passwordEncoder(bCryptPasswordEncoder);  */
     }
  
     @Override
     protected void configure(HttpSecurity http) throws Exception {
-    	http.
-    	csrf().disable()
-    	.exceptionHandling()
-        .authenticationEntryPoint(restAuthenticationEntryPoint)
-        .and()
-        .authorizeRequests()
-        .anyRequest().authenticated()
-       	.and()
-    		.formLogin()
-    		.successHandler(restAuthenticationSuccessHandler)
-    		.failureHandler(restAuthenticationFailureHandler)
-    	.and()
-        .logout().and().sessionManagement().maximumSessions(1);
+    	 http
+         .csrf().disable()
+         .exceptionHandling()
+         .authenticationEntryPoint(restAuthenticationEntryPoint)
+         .and()
+         .authorizeRequests()
+         .antMatchers("/api/**").authenticated()
+         .and()
+         .formLogin()
+         .successHandler(restAuthenticationSuccessHandler)
+         .failureHandler(restAuthenticationFailureHandler)
+         .and()
+         .logout();
     }
     
     @Bean
